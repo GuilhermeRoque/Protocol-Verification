@@ -80,3 +80,98 @@ vini@vini-pc:~/IFSC/PTC/verificacao_protocolos/Protocol-Verification/arq$ ./spin
  30:	proc  0 (arq_fsm:1) fsm_arq.pml:122 (state 85)
 2 processes created
 
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================
+
+active proctype tester() {
+  bit seq = 0
+  bit data_seq = 0
+
+  // inicia enviando um payload
+  c_up_recv!Payload
+  printf("TEST [INIT]: enviou PAYLOAD\n")
+
+  waitDown:
+    do
+    :: c_down_notify?Data,seq ->
+      printf("TEST [waitDown]: recebeu DATA com seq=%d\n", seq);
+      goto sendAck
+
+    od
+
+  sendAck:
+    do
+    :: c_down_recv!Ack,seq ->
+      printf("TEST [sendAck]: enviou ACK com seq=%d\n", seq);
+      goto doSomething
+
+    // ack com seq errado, deve receber erro no up
+    :: c_down_recv!Ack,!seq ->
+      printf("TEST [sendAck]: enviou ACK com !seq=%d\n", !seq);
+      goto waitUp
+
+    // pode nao mandar o ack, neste caso deve receber erro no up
+    :: timeout ->
+      printf("TEST [sendAck]: timeout\n");
+      goto waitUp
+
+    od
+
+
+  waitAck:
+    do
+    :: c_down_notify?Ack,eval(data_seq) ->
+      printf("TEST [waitAck]: recebeu ACK com data_seq=%d\n", data_seq);
+      data_seq = !data_seq
+      goto doSomething
+
+    :: c_down_notify?Ack,eval(!data_seq) ->
+      printf("TEST [waitAck]: recebeu ACK com !data_seq=%d\n", !data_seq);
+      goto doSomething
+    od
+
+  waitUp:
+    do
+    :: c_up_notify?Payload ->
+      printf("TEST [waitUp]: recebeu PAYLOAD\n");
+      goto doSomething
+
+    :: c_up_notify?Erro ->
+      printf("TEST [waitUp]: recebeu ERRO\n");
+      goto doSomething
+
+    od
+
+
+  doSomething:
+    do
+
+    // envia data com seq correto
+    :: c_down_recv!Data,data_seq ->
+      printf("TEST [doSomething]: enviou DATA com data_seq=%d\n", data_seq);
+      goto waitAck
+
+    // envia data com seq invalido
+    :: c_down_recv!Data,!data_seq ->
+      printf("TEST [doSomething]: enviou DATA com !data_seq=%d\n", !data_seq);
+      goto waitAck
+
+    :: c_up_recv!Payload ->
+      printf("TEST [doSomething]: enviou PAYLOAD\n")
+      goto waitDown
+
+    od
+}
+
+=========================================
