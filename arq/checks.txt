@@ -1,0 +1,82 @@
+
+Erro da maquina ??
+
+vini@vini-pc:~/IFSC/PTC/verificacao_protocolos/Protocol-Verification/arq$ ./spin fsm_arq.pml 
+          TEST [INIT]: enviou PAYLOAD
+      ARQ [Idle]: recebeu UP|PAYLOAD, enviou DOWN|DATA com seq=0
+          TEST [waitDown]: recebeu DATA com seq=0
+          TEST [sendAck]: enviou ACK com seq=0
+      ARQ [WaitAck]: recebeu DOWN|ACK com seq=0
+          TEST [doSomething]: enviou DATA com data_seq=0
+      ARQ [BackoffAck]: recebeu DOWN|DATA, enviou DOWN|ACK com seq=0
+      ARQ [BackoffAck]: recebeu DOWN|DATA, enviou UP|PAYLOAD
+          TEST [waitAck]: recebeu ACK com data_seq=0
+          TEST [doSomething]: enviou DATA com data_seq=1
+      ARQ [BackoffAck]: recebeu DOWN|DATA, enviou DOWN|ACK com seq=1
+          TEST [waitAck]: recebeu ACK com data_seq=1
+          TEST [doSomething]: enviou DATA com !data_seq=1
+      timeout
+#processes: 2
+		queue 4 (c_up_notify): [Payload]
+		queue 2 (c_up_recv): 
+		queue 3 (c_down_notify): 
+		queue 1 (c_down_recv): [Data,1]
+ 45:	proc  1 (fsm_framming:1) fsm_arq.pml:166 (state 28)
+ 45:	proc  0 (arq_fsm:1) fsm_arq.pml:107 (state 74)
+2 processes created
+
+
+
+qual o problema??
+
+vini@vini-pc:~/IFSC/PTC/verificacao_protocolos/Protocol-Verification/arq$ ./spin fsm_arq.pml 
+          TEST [INIT]: enviou PAYLOAD
+      ARQ [Idle]: recebeu UP|PAYLOAD, enviou DOWN|DATA com seq=0
+          TEST [waitDown]: recebeu DATA com seq=0
+          TEST [sendAck]: enviou ACK com !seq=1
+      ARQ [WaitAck]: recebeu DOWN|ACK com seq=1
+      ARQ [WaitAck]: incrementou retry_counter
+      timeout
+      ARQ [BackoffRelay]: ocorreu TIMEOUT, enviou DOWN|DATA com seq=0
+      timeout
+      ARQ [WaitAck]: ocorreu TIMEOUT
+      ARQ [WaitAck]: incrementou retry_counter
+      timeout
+      timeout
+#processes: 2
+		queue 4 (c_up_notify): 
+		queue 2 (c_up_recv): 
+		queue 3 (c_down_notify): [Data,0]
+		queue 1 (c_down_recv): 
+ 30:	proc  1 (fsm_framming:1) fsm_arq.pml:184 (state 37)
+ 30:	proc  0 (arq_fsm:1) fsm_arq.pml:122 (state 85)
+2 processes created
+vini@vini-pc:~/IFSC/PTC/verificacao_protocolos/Protocol-Verification/arq$ 
+
+
+mesmo caso acima
+
+
+vini@vini-pc:~/IFSC/PTC/verificacao_protocolos/Protocol-Verification/arq$ ./spin fsm_arq.pml 
+          TEST [INIT]: enviou PAYLOAD
+      ARQ [Idle]: recebeu UP|PAYLOAD, enviou DOWN|DATA com seq=0
+          TEST [waitDown]: recebeu DATA com seq=0
+          TEST [sendAck]: enviou ACK com !seq=1
+      ARQ [WaitAck]: recebeu DOWN|ACK com seq=1
+      ARQ [WaitAck]: incrementou retry_counter
+      timeout
+      ARQ [BackoffRelay]: ocorreu TIMEOUT, enviou DOWN|DATA com seq=0
+      timeout
+      ARQ [WaitAck]: ocorreu TIMEOUT
+      ARQ [WaitAck]: incrementou retry_counter
+      timeout
+      timeout
+#processes: 2
+		queue 4 (c_up_notify): 
+		queue 2 (c_up_recv): 
+		queue 3 (c_down_notify): [Data,0]
+		queue 1 (c_down_recv): 
+ 30:	proc  1 (fsm_framming:1) fsm_arq.pml:184 (state 37)
+ 30:	proc  0 (arq_fsm:1) fsm_arq.pml:122 (state 85)
+2 processes created
+
