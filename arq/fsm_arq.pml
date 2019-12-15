@@ -11,13 +11,10 @@ proctype arq_fsm(chan tx, rx) {
   bit N = 0
   int retry_counter = 0
 
-  recvErr:
-    printf("ARQ [recvErr]: recebeu UP|ERRO\n");
-    goto Idle
-
   Idle:
     do
-    // simula que existe sempre um payload a enviar
+    // Simula que existe sempre um payload a enviar.
+    // Na maquina original, ele verifica se existe um payload na fila. Aqui considera que sempre existe.
     :: tx!Data,N ->
       printf("ARQ [Idle]: recebeu UP|PAYLOAD, enviou DOWN|DATA com seq=%d\n", N);
       goto WaitAck
@@ -68,11 +65,14 @@ proctype arq_fsm(chan tx, rx) {
         printf("ARQ [WaitAck]: notificou UP|ERRO\n");
 
         // para ser usado na formula
-        OcorreuErro:
+        NotificaErro:
         goto Idle
+
       :: else ->
         retry_counter++
         printf("ARQ [WaitAck]: incrementou retry_counter\n");
+
+        SomaRetry:
         goto BackoffRelay
       fi
 
@@ -86,11 +86,15 @@ proctype arq_fsm(chan tx, rx) {
         retry_counter = 0
         // c_up_notify!Erro
         printf("ARQ [WaitAck]: notificou UP|ERRO\n");
-        OcorreuErro
+
+        NotificaErroTimeout:
         goto Idle
+        
       :: else ->
         retry_counter++
         printf("ARQ [WaitAck]: incrementou retry_counter\n");
+
+        SomaRetryTimeout:
         goto BackoffRelay
       fi
 
@@ -111,12 +115,6 @@ proctype arq_fsm(chan tx, rx) {
       //c_up_notify!Payload
       printf("ARQ [BackoffAck]: recebeu DOWN|DATA, enviou UP|PAYLOAD\n");
       goto BackoffAck
-
-    // ADICIONADO
-    //:: rx?Data,eval(!M) ->
-    //  tx!Ack,!M
-    //  printf("ARQ [BackoffAck]: recebeu DOWN|DATA, enviou DOWN|ACK com seq=%d\n", !M);
-    //  goto BackoffAck
 
     od
 
@@ -145,6 +143,6 @@ active proctype inicia() {
 }
 
 // Verifica se o transmissor sempre sabe do erro
-// ltl check_err { [] ( arq_fsm@critical || ! p2@critical)}
-
-
+// Caso a maquina passe pela sequencia de três erros consecutivos, seja por timeout ou seja por ack com sequencia inválida, implica que um erro será gerado (notificado)
+// Dessa forma, o transmissor sempre sabe quando o erro acontece
+ltl check_err { ((( (arq_fsm@SomaRetry || arq_fsm@SomaRetryTimeout) U (arq_fsm@SomaRetry || arq_fsm@SomaRetryTimeout) ) U (arq_fsm@SomaRetry || arq_fsm@SomaRetryTimeout)) U (arq_fsm@SomaRetry || arq_fsm@SomaRetryTimeout)) -> <> (arq_fsm@NotificaErro || arq_fsm@NotificaErroTimeout) }
