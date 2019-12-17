@@ -7,25 +7,28 @@ chan c1 = [1] of {mtype}
 chan c2 = [1] of {mtype}
 int x;
 
-proctype session(chan tx, rx) {
+bool state1 = false
+bool state2 = false
+
+proctype session(chan tx, rx; bool state) {
   DISC:
+  state = false
   do
     ::tx!CR -> //start
       goto HAND1
-    :: timeout -> 
-       if
-         ::rx?x //ignore receiving data
-         ::empty(rx)
-       fi
+
+    ::rx?CR
+    ::rx?CC
+    ::rx?KR
+    ::rx?KC
+    ::rx?DR
+    ::rx?DC
+    ::rx?Data
   od
 
   HAND1:
   do
     :: timeout ->
-       if
-         ::rx?x //ignore receiving data
-         ::empty(rx)
-       fi
        tx!CR
        goto HAND1
     :: rx?CR -> 
@@ -33,15 +36,18 @@ proctype session(chan tx, rx) {
        goto HAND2
     :: rx?CC -> 
        goto HAND3
+
+    ::rx?KR
+    ::rx?KC
+    ::rx?DR
+    ::rx?DC
+    ::rx?Data
+
   od
 
   HAND2:
   do
     :: timeout ->
-       if
-         ::rx?x //ignore receiving data
-         ::empty(rx)
-       fi
        tx!CR
        goto HAND1
     :: rx?CC -> 
@@ -49,6 +55,13 @@ proctype session(chan tx, rx) {
     :: rx?DR-> 
        tx!DR
        goto HALF2
+
+    ::rx?CR
+    ::rx?KR
+    ::rx?KC
+    ::rx?DC
+    ::rx?Data
+
   od
 
   HAND3:
@@ -57,15 +70,20 @@ proctype session(chan tx, rx) {
        tx!CC
        goto CON
     :: timeout ->
-       if
-         ::rx?x //ignore receiving data
-         ::empty(rx)
-       fi
        tx!CR
        goto HAND1
+
+    ::rx?CC
+    ::rx?KR
+    ::rx?KC
+    ::rx?DR
+    ::rx?DC
+    ::rx?Data
+
   od
 
   CON:
+  state = true
   do
     :: tx!DR -> // close
        goto HALF1
@@ -79,12 +97,14 @@ proctype session(chan tx, rx) {
     :: tx!KR ->
        goto CHECK
     :: timeout -> 
-       if
-         ::rx?x //ignore receiving data
-         ::empty(rx)
-       fi
        tx!CR
        goto HAND1
+
+    ::rx?CR
+    ::rx?CC
+    ::rx?KC
+    ::rx?DC
+
   od
 
   CHECK:
@@ -100,12 +120,12 @@ proctype session(chan tx, rx) {
        tx!DR
        goto HALF2
     :: timeout -> 
-       if
-         ::rx?x //ignore receiving data
-         ::empty(rx)
-       fi
-       tx!CR
        goto HAND1
+
+    ::rx?CR
+    ::rx?CC
+    ::rx?DC
+
   od
 
   HALF1:
@@ -117,11 +137,13 @@ proctype session(chan tx, rx) {
        tx!DC
        goto DISC
     :: timeout -> 
-       if
-         ::rx?x //ignore receiving data
-         ::empty(rx)
-       fi
        goto DISC
+
+    ::rx?CR
+    ::rx?CC
+    ::rx?KC
+    ::rx?DC
+
   od
 
   HALF2:
@@ -131,17 +153,21 @@ proctype session(chan tx, rx) {
     :: rx?DC ->
        goto DISC
     :: timeout ->
-        if
-         ::rx?x //ignore receiving data
-         ::empty(rx)
-       fi
-      goto DISC
+       goto DISC
+
+    ::rx?CR
+    ::rx?CC
+    ::rx?KR
+    ::rx?KC
+    ::rx?Data
   od
 }
 
 
 init {
-  run session(c1,c2)
-  run session(c2, c1)
+  run session(c1,c2, state1)
+  run session(c2, c1, state2)
 
 }
+ltl verifica { <> ((state1 == true)&&(state2 == true)) }
+ltl verifica2 { <> ((state1 == false)&&(state2 == false)) }
