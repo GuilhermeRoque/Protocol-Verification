@@ -169,5 +169,5 @@ init {
   run session(c2, c1, state2)
 
 }
-ltl verifica { <> ((state1 == true)&&(state2 == true)) }
-ltl verifica2 { <> ((state1 == false)&&(state2 == false)) }
+ltl conect { [] <> ((state1 == true)&&(state2 == true)) }
+ltl disconect { [] <> ((state1 == false)&&(state2 == false)) }

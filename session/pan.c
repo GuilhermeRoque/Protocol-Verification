@@ -68,6 +68,14 @@ globinit(void)
 #endif
 	*proc_offset, *q_offset;
 void
+locinit3(int h)
+{
+}
+void
+locinit2(int h)
+{
+}
+void
 locinit1(int h)
 {
 }
@@ -481,8 +489,35 @@ int _;	/* predefined write-only variable */
 	#define Index(x, y)	x
 #endif
 
+short src_ln3 [] = {
+	  0,  14,  14,  15,  15,  13,  17,  13, 
+	 19,  19,  18,  21,  18,  21,   0, };
+S_F_MAP src_file3 [] = {
+	{ "-", 0, 0 },
+	{ "_spin_nvr.tmp", 1, 13 },
+	{ "-", 14, 15 }
+};
+short *src_claim;
+uchar reached3 [] = {
+	  0,   1,   1,   1,   1,   0,   1,   1, 
+	  1,   1,   0,   1,   1,   0,   0, };
+uchar *loopstate3;
+
+short src_ln2 [] = {
+	  0,   3,   3,   4,   4,   2,   6,   2, 
+	  8,   8,   7,  10,   7,  10,   0, };
+S_F_MAP src_file2 [] = {
+	{ "-", 0, 0 },
+	{ "_spin_nvr.tmp", 1, 13 },
+	{ "-", 14, 15 }
+};
+uchar reached2 [] = {
+	  0,   1,   1,   1,   1,   0,   1,   1, 
+	  1,   1,   0,   1,   1,   0,   0, };
+uchar *loopstate2;
+
 short src_ln1 [] = {
-	  0, 144, 145, 147,   0, };
+	  0, 168, 169, 171,   0, };
 S_F_MAP src_file1 [] = {
 	{ "-", 0, 0 },
 	{ "session.pml", 1, 3 },
@@ -493,55 +528,61 @@ uchar reached1 [] = {
 uchar *loopstate1;
 
 short src_ln0 [] = {
-	  0,  13,  14,  15,  17,  18,  16,  20, 
-	 12,  22,  12,  24,  26,  27,  25,  29, 
-	 29,  30,  31,  32,  33,  34,  35,  23, 
-	 38,  23,  40,  42,  43,  41,  45,  45, 
-	 46,  47,  48,  49,  50,  51,  39,  54, 
-	 39,  56,  57,  58,  59,  61,  62,  60, 
-	 64,  64,  65,  55,  68,  55,  70,  71, 
-	 72,  73,  74,  75,  76,  77,  78,  79, 
-	 80,  81,  83,  84,  82,  86,  86,  87, 
-	 69,  90,  69,  92,  93,  94,  95,  96, 
-	 97,  98,  99, 100, 101, 102, 104, 105, 
-	103, 107, 107, 108,  91, 111,  91, 113, 
-	114, 115, 116, 117, 118, 119, 121, 122, 
-	120, 124, 124, 112, 127, 112, 129, 130, 
-	131, 132, 133, 135, 136, 134, 138, 138, 
-	128, 140, 128, 140,   0, };
+	  0,  15,  17,  18,  20,  21,  22,  23, 
+	 24,  25,  26,  16,  29,  16,  31,  32, 
+	 33,  34,  35,  36,  37,  38,  40,  41, 
+	 42,  43,  44,  30,  48,  30,  50,  51, 
+	 52,  53,  54,  55,  56,  57,  59,  60, 
+	 61,  62,  63,  49,  67,  49,  69,  70, 
+	 71,  72,  73,  74,  76,  77,  78,  79, 
+	 80,  81,  68,  85,  68,  86,  88,  89, 
+	 90,  91,  92,  93,  94,  95,  96,  97, 
+	 98,  99, 100, 101, 103, 104, 105, 106, 
+	 87, 110,  87, 112, 113, 114, 115, 116, 
+	117, 118, 119, 120, 121, 122, 123, 125, 
+	126, 127, 111, 131, 111, 133, 134, 135, 
+	136, 137, 138, 139, 140, 142, 143, 144, 
+	145, 132, 149, 132, 151, 152, 153, 154, 
+	155, 156, 158, 159, 160, 161, 162, 150, 
+	164, 150, 164,   0, };
 S_F_MAP src_file0 [] = {
 	{ "-", 0, 0 },
-	{ "session.pml", 1, 123 },
-	{ "-", 124, 125 }
+	{ "session.pml", 1, 130 },
+	{ "-", 131, 132 }
 };
 uchar reached0 [] = {
-	  0,   1,   1,   1,   1,   1,   0,   1, 
-	  0,   1,   1,   1,   1,   1,   0,   1, 
-	  0,   1,   1,   0,   1,   1,   1,   0, 
-	  1,   1,   1,   1,   1,   0,   1,   0, 
-	  1,   1,   1,   1,   0,   1,   0,   1, 
-	  1,   1,   0,   1,   1,   1,   1,   0, 
-	  1,   0,   1,   0,   1,   1,   1,   1, 
+	  0,   0,   1,   1,   1,   1,   1,   1, 
+	  1,   1,   1,   0,   1,   1,   1,   0, 
+	  1,   1,   0,   1,   1,   1,   1,   1, 
+	  1,   1,   1,   0,   1,   1,   1,   0, 
+	  1,   1,   1,   1,   0,   1,   1,   1, 
+	  1,   1,   1,   0,   1,   1,   1,   0, 
+	  1,   1,   0,   1,   1,   1,   1,   1, 
+	  1,   1,   0,   1,   1,   0,   1,   1, 
 	  1,   1,   1,   0,   1,   0,   1,   1, 
-	  1,   1,   1,   1,   0,   1,   0,   1, 
+	  1,   1,   0,   1,   1,   1,   1,   1, 
 	  0,   1,   1,   1,   1,   0,   1,   1, 
 	  1,   1,   1,   0,   1,   1,   1,   1, 
-	  0,   1,   0,   1,   0,   1,   1,   1, 
-	  1,   0,   1,   0,   1,   1,   1,   1, 
-	  0,   1,   1,   0,   1,   1,   1,   0, 
-	  1,   1,   1,   1,   1,   0,   1,   1, 
-	  0,   1,   1,   0,   0, };
+	  1,   1,   0,   1,   1,   1,   1,   0, 
+	  1,   0,   1,   1,   1,   1,   1,   1, 
+	  1,   0,   1,   1,   1,   0,   1,   1, 
+	  1,   1,   1,   1,   1,   1,   1,   0, 
+	  1,   1,   0,   0, };
 uchar *loopstate0;
-uchar reached2[3];  /* np_ */
-uchar *loopstate2;  /* np_ */
+uchar reached4[3];  /* np_ */
+uchar *loopstate4;  /* np_ */
 struct {
 	int tp; short *src;
 } src_all[] = {
+	{ 3, &src_ln3[0] },
+	{ 2, &src_ln2[0] },
 	{ 1, &src_ln1[0] },
 	{ 0, &src_ln0[0] },
 	{ 0, (short *) 0 }
 };
 S_F_MAP *flref[] = {
+	src_file3,
+	src_file2,
 	src_file1,
 	src_file0 
 };
@@ -552,10 +593,16 @@ struct {
 	{ (char *) 0, "" }
 };
 
-short Air[] = {  (short) Air0, (short) Air1, (short) Air2 };
+short Air[] = {  (short) Air0, (short) Air1, (short) Air2, (short) Air3, (short) Air4
+#ifndef NOCLAIM
+	, (short) Air5
+#endif
+	 };
 char *procname[] = {
    "session",
    ":init:",
+   "verifica",
+   "verifica2",
    ":np_:",
 	0
 };
@@ -565,19 +612,23 @@ enum btypes { NONE=0, N_CLAIM=1, I_PROC=2, A_PROC=3, P_PROC=4, E_TRACE=5, N_TRAC
 int Btypes[] = {
    4,	/* session */
    2,	/* :init: */
+   1,	/* verifica */
+   1,	/* verifica2 */
    0	/* :np_: */
 };
 
+#ifndef NOCLAIM
 uchar spin_c_typ[NCLAIMS]; /* claim-types */
-uchar *accpstate[3];
-uchar *progstate[3];
-uchar *loopstate[3];
-uchar *reached[3];
-uchar *stopstate[3];
-uchar *visstate[3];
-short *mapstate[3];
+#endif
+uchar *accpstate[5];
+uchar *progstate[5];
+uchar *loopstate[5];
+uchar *reached[5];
+uchar *stopstate[5];
+uchar *visstate[5];
+short *mapstate[5];
 #ifdef HAS_CODE
-	int NrStates[3];
+	int NrStates[5];
 #endif
 #ifdef TRIX
 int what_p_size(int);
@@ -711,7 +762,7 @@ bfs_fixmask(int caller)
 }
 #endif
 int
-addproc(int calling_pid, int priority, int n, int par0, int par1)
+addproc(int calling_pid, int priority, int n, int par0, int par1, int par2)
 {	int j = 0, h = now._nr_pr;
 #ifndef NOCOMP
 	int k;
@@ -735,6 +786,11 @@ addproc(int calling_pid, int priority, int n, int par0, int par1)
 	case 0: j = sizeof(P0); break;
 	case 1: j = sizeof(P1); break;
 	case 2: j = sizeof(P2); break;
+	case 3: j = sizeof(P3); break;
+	case 4: j = sizeof(P4); break;
+#ifndef NOCLAIM
+	case 5: j = sizeof(P5); break;
+#endif
 	default: Uerror("bad proc - addproc");
 	}
 	#ifdef BFS_PAR
@@ -827,14 +883,68 @@ addproc(int calling_pid, int priority, int n, int par0, int par1)
 	{	((P0 *)_this)->_pid = h;
 	}
 	switch (n) {
-	case 2:	/* np_ */
-		((P2 *)pptr(h))->_t = 2;
-		((P2 *)pptr(h))->_p = 0;
-#ifdef HAS_PRIORITY
-		((P2 *)pptr(h))->_priority = priority;
+#ifndef NOCLAIM
+	case 5:	/* claim select */
+		spin_c_typ[0] = 3; /* verifica2 */
+		((P5 *)pptr(h))->c_cur[0] = 5;
+		reached3[5]=1;
+		spin_c_typ[1] = 2; /* verifica */
+		((P5 *)pptr(h))->c_cur[1] = 5;
+		reached2[5]=1;
+		((P5 *)pptr(h))->_t = 2;
+		((P5 *)pptr(h))->_p = 5;
+		((P5 *)pptr(h))->_n = 1; /* verifica */
+		src_claim = src_ln2;
+#ifndef BFS
+		if (whichclaim == -1 && claimname == NULL)
+			printf("pan: ltl fomula verifica\n");
 #endif
-		reached2[0] = 1;
-		accpstate[2][1] = 1;
+		if (whichclaim != -1)
+		{	select_claim(whichclaim);
+		}
+		break;
+
+#endif
+	case 4:	/* np_ */
+		((P4 *)pptr(h))->_t = 4;
+		((P4 *)pptr(h))->_p = 0;
+#ifdef HAS_PRIORITY
+		((P4 *)pptr(h))->_priority = priority;
+#endif
+		reached4[0] = 1;
+		accpstate[4][1] = 1;
+		break;
+	case 3:	/* verifica2 */
+		((P3 *)pptr(h))->_t = 3;
+		((P3 *)pptr(h))->_p = 5;
+#ifdef HAS_PRIORITY
+		((P3 *)pptr(h))->_priority = priority; /* was: 1 */
+#endif
+		reached3[5]=1;
+		src_claim = src_ln3;
+		/* params: */
+		/* locals: */
+#ifdef VAR_RANGES
+#endif
+#ifdef HAS_CODE
+		locinit3(h);
+#endif
+		break;
+	case 2:	/* verifica */
+		((P2 *)pptr(h))->_t = 2;
+		((P2 *)pptr(h))->_p = 5;
+#ifdef HAS_PRIORITY
+		((P2 *)pptr(h))->_priority = priority; /* was: 1 */
+#endif
+		reached2[5]=1;
+		src_claim = src_ln2;
+		/* params: */
+		/* locals: */
+#ifdef VAR_RANGES
+#endif
+#ifdef HAS_CODE
+		locinit2(h);
+#endif
 		break;
 	case 1:	/* :init: */
 		((P1 *)pptr(h))->_t = 1;
@@ -851,16 +961,18 @@ addproc(int calling_pid, int priority, int n, int par0, int par1)
 		break;
 	case 0:	/* session */
 		((P0 *)pptr(h))->_t = 0;
-		((P0 *)pptr(h))->_p = 8;
+		((P0 *)pptr(h))->_p = 1;
 #ifdef HAS_PRIORITY
 		((P0 *)pptr(h))->_priority = priority; /* was: 1 */
 #endif
-		reached0[8]=1;
+		reached0[1]=1;
 		/* params: */
 		((P0 *)pptr(h))->tx = par0;
 		((P0 *)pptr(h))->rx = par1;
+		((P0 *)pptr(h))->state = par2;
 		/* locals: */
 #ifdef VAR_RANGES
+		logval("session:state", ((P0 *)pptr(h))->state);
 #endif
 #ifdef HAS_CODE
 		locinit0(h);
@@ -894,6 +1006,8 @@ col_p(int i, char *z)
 	case 0: j = sizeof(P0); break;
 	case 1: j = sizeof(P1); break;
 	case 2: j = sizeof(P2); break;
+	case 3: j = sizeof(P3); break;
+	case 4: j = sizeof(P4); break;
 	default: Uerror("bad proctype - collapse");
 	}
 	if (z) x = z; else x = scratch;
@@ -974,34 +1088,54 @@ run(void)
 	Maxbody = max(Maxbody, ((int) sizeof(P0)));
 	Maxbody = max(Maxbody, ((int) sizeof(P1)));
 	Maxbody = max(Maxbody, ((int) sizeof(P2)));
+	Maxbody = max(Maxbody, ((int) sizeof(P3)));
+	Maxbody = max(Maxbody, ((int) sizeof(P4)));
 	reached[0] = reached0;
 	reached[1] = reached1;
 	reached[2] = reached2;
+	reached[3] = reached3;
+	reached[4] = reached4;
 	accpstate[0] = (uchar *) emalloc(_nstates0);
 	accpstate[1] = (uchar *) emalloc(_nstates1);
 	accpstate[2] = (uchar *) emalloc(_nstates2);
+	accpstate[3] = (uchar *) emalloc(_nstates3);
+	accpstate[4] = (uchar *) emalloc(_nstates4);
 	progstate[0] = (uchar *) emalloc(_nstates0);
 	progstate[1] = (uchar *) emalloc(_nstates1);
 	progstate[2] = (uchar *) emalloc(_nstates2);
+	progstate[3] = (uchar *) emalloc(_nstates3);
+	progstate[4] = (uchar *) emalloc(_nstates4);
 	loopstate0 = loopstate[0] = (uchar *) emalloc(_nstates0);
 	loopstate1 = loopstate[1] = (uchar *) emalloc(_nstates1);
 	loopstate2 = loopstate[2] = (uchar *) emalloc(_nstates2);
+	loopstate3 = loopstate[3] = (uchar *) emalloc(_nstates3);
+	loopstate4 = loopstate[4] = (uchar *) emalloc(_nstates4);
 	stopstate[0] = (uchar *) emalloc(_nstates0);
 	stopstate[1] = (uchar *) emalloc(_nstates1);
 	stopstate[2] = (uchar *) emalloc(_nstates2);
+	stopstate[3] = (uchar *) emalloc(_nstates3);
+	stopstate[4] = (uchar *) emalloc(_nstates4);
 	visstate[0] = (uchar *) emalloc(_nstates0);
 	visstate[1] = (uchar *) emalloc(_nstates1);
 	visstate[2] = (uchar *) emalloc(_nstates2);
+	visstate[3] = (uchar *) emalloc(_nstates3);
+	visstate[4] = (uchar *) emalloc(_nstates4);
 	mapstate[0] = (short *) emalloc(_nstates0 * sizeof(short));
 	mapstate[1] = (short *) emalloc(_nstates1 * sizeof(short));
 	mapstate[2] = (short *) emalloc(_nstates2 * sizeof(short));
+	mapstate[3] = (short *) emalloc(_nstates3 * sizeof(short));
+	mapstate[4] = (short *) emalloc(_nstates4 * sizeof(short));
 	stopstate[0][_endstate0] = 1;
 	stopstate[1][_endstate1] = 1;
 	stopstate[2][_endstate2] = 1;
+	stopstate[3][_endstate3] = 1;
+	stopstate[4][_endstate4] = 1;
 #ifdef HAS_CODE
 	NrStates[0] = _nstates0;
 	NrStates[1] = _nstates1;
 	NrStates[2] = _nstates2;
+	NrStates[3] = _nstates3;
+	NrStates[4] = _nstates4;
 #endif
 
 	Maxbody = max(Maxbody, ((int) sizeof(Q1)));
@@ -1010,8 +1144,12 @@ run(void)
 	if ((Maxbody % WS) != 0)
 		Maxbody += WS - (Maxbody % WS);
 
+	accpstate[3][10] = 1;
+	accpstate[2][10] = 1;
 	retrans(0, _nstates0, _start0, src_ln0, reached0, loopstate0);
 	retrans(1, _nstates1, _start1, src_ln1, reached1, loopstate1);
+	retrans(2, _nstates2, _start2, src_ln2, reached2, loopstate2);
+	retrans(3, _nstates3, _start3, src_ln3, reached3, loopstate3);
 	if (state_tables)
 	{ if (dodot) exit(0);
 	  printf("\nTransition Type: ");
@@ -12353,16 +12491,21 @@ do_reach(void)
 {
 	r_ck(reached0, _nstates0, 0, src_ln0, src_file0);
 	r_ck(reached1, _nstates1, 1, src_ln1, src_file1);
+	r_ck(reached2, _nstates2, 2, src_ln2, src_file2);
+	r_ck(reached3, _nstates3, 3, src_ln3, src_file3);
 }
 
 void
 iniglobals(int calling_pid)
 {
+		now.state1 = 0;
+		now.state2 = 0;
 		now.c1 = addqueue(calling_pid, 1, 0);
 		now.c2 = addqueue(calling_pid, 2, 0);
-		now.x = 0;
+		x = 0;
 #ifdef VAR_RANGES
-		logval("x", now.x);
+		logval("state1", now.state1);
+		logval("state2", now.state2);
 #endif
 }
 
@@ -12446,6 +12589,8 @@ what_p_size(int t)
 	case 0: j = sizeof(P0); break;
 	case 1: j = sizeof(P1); break;
 	case 2: j = sizeof(P2); break;
+	case 3: j = sizeof(P3); break;
+	case 4: j = sizeof(P4); break;
 	default: Uerror("bad proctype");
 	}
 	return j;
@@ -14176,12 +14321,19 @@ c_globals(void)
 	c_chandump(now.c1);
 	printf("	chan c2 (=%d):	len %d:\t", now.c2, q_len(now.c2));
 	c_chandump(now.c2);
-	printf("	int    x:	%d\n", now.x);
+	printf("	bit    state1:	%d\n", now.state1);
+	printf("	bit    state2:	%d\n", now.state2);
 }
 void
 c_locals(int pid, int tp)
 {	/* int i; */
 	switch(tp) {
+	case 3:
+		/* none */
+		break;
+	case 2:
+		/* none */
+		break;
 	case 1:
 		/* none */
 		break;
@@ -14191,6 +14343,7 @@ c_locals(int pid, int tp)
 	c_chandump(((P0 *)pptr(pid))->tx);
 	printf("	chan rx (=%d):	len %d:\t", ((P0 *)pptr(pid))->rx, q_len(((P0 *)pptr(pid))->rx));
 	c_chandump(((P0 *)pptr(pid))->rx);
+	printf("	bit    state:	%d\n", ((P0 *)pptr(pid))->state);
 		break;
 	}
 }
@@ -14238,7 +14391,7 @@ c_chandump(int from)
 	printf("\n");
 }
 
-Trans *t_id_lkup[126];
+Trans *t_id_lkup[159];
 
 
 #ifdef BFS_PAR

@@ -1,0 +1,22 @@
+never verifica {    /* !([] (<> (((state1==1)) && ((state2==1))))) */
+T0_init:
+	do
+	:: (! ((((state1==1)) && ((state2==1))))) -> goto accept_S4
+	:: (1) -> goto T0_init
+	od;
+accept_S4:
+	do
+	:: (! ((((state1==1)) && ((state2==1))))) -> goto accept_S4
+	od;
+}
+never verifica2 {    /* !([] (<> (((state1==0)) && ((state2==0))))) */
+T0_init:
+	do
+	:: (! ((((state1==0)) && ((state2==0))))) -> goto accept_S4
+	:: (1) -> goto T0_init
+	od;
+accept_S4:
+	do
+	:: (! ((((state1==0)) && ((state2==0))))) -> goto accept_S4
+	od;
+}
